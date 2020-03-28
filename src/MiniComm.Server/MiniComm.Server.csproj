@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <ApplicationIcon>server.ico</ApplicationIcon>
+    <Platforms>AnyCPU;x64;x86</Platforms>
+    <Authors>米团彡团</Authors>
+    <Company>Mituan</Company>
+    <Version>1.0</Version>
+    <Copyright>Copyright © 2020 米团彡团</Copyright>
+    <AssemblyName>Mini Communication Server</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="MiniSocket.Server">
+      <HintPath>..\MiniSocket.Server\bin\Debug\netstandard2.0\MiniSocket.Server.dll</HintPath>
+    </Reference>
+    <Reference Include="MiniSocket.Transmitting">
+      <HintPath>..\MiniSocket.Transmitting\bin\Debug\netstandard2.0\MiniSocket.Transmitting.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

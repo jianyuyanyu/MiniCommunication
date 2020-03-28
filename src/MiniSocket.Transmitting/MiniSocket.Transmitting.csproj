@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Copyright>Copyright © 2020 米团彡团</Copyright>
+    <Company>Mituan</Company>
+    <Authors>米团彡团</Authors>
+    <Version>1.0</Version>
+  </PropertyGroup>
+
+</Project>

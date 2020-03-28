@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <ApplicationIcon>Resources\Images\m.ico</ApplicationIcon>
+    <UseWPF>true</UseWPF>
+    <Platforms>AnyCPU;x64</Platforms>
+    <StartupObject>MiniComm.Client.App</StartupObject>
+    <PackageId>迷你通讯</PackageId>
+    <Version>1.0</Version>
+    <Authors>米团彡团</Authors>
+    <Company>Mituan</Company>
+    <Product>迷你通讯</Product>
+    <Copyright>Copyright © 2020 米团彡团</Copyright>
+    <AssemblyName>Mini Communication</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Images\boy.png" />
+    <None Remove="Resources\Images\folder.png" />
+    <None Remove="Resources\Images\girl.png" />
+    <None Remove="Resources\Images\picture.png" />
+    <None Remove="Resources\Images\m.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="MiniSocket.Client">
+      <HintPath>..\MiniSocket.Client\bin\Debug\netstandard2.0\MiniSocket.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="MiniSocket.Transmitting">
+      <HintPath>..\MiniSocket.Transmitting\bin\Debug\netstandard2.0\MiniSocket.Transmitting.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Images\boy.png" />
+    <Resource Include="Resources\Images\folder.png" />
+    <Resource Include="Resources\Images\girl.png" />
+    <Resource Include="Resources\Images\picture.png" />
+    <Resource Include="Resources\Images\m.ico" />
+  </ItemGroup>
+
+</Project>
