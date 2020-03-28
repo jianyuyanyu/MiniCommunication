@@ -13,15 +13,10 @@
 [编译以下项目]
 
 核心库
-
-MiniSocket.Transmitting
-MiniSocket.Server
-MiniSocket.Client
+MiniSocket.Transmitting，MiniSocket.Server，MiniSocket.Client
 
 终端程序
-
-MiniComm.Server
-MiniComm.Client
+MiniComm.Server，MiniComm.Client
 
 #### 配置文件
 
