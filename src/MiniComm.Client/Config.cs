@@ -58,10 +58,10 @@ namespace MiniComm.Client
                     new XElement("Server", new XElement("IP", "0.0.0.0"), new XElement("Port", 0))).Save(configFile);
             }
             XElement miniClient = XElement.Load(configFile);
-            string ip = miniClient.Descendants("Server").Select(xml => xml.Element("IP").Value).ToArray()[0];
-            int port = Convert.ToInt32(miniClient.Descendants("Server").Select(xml => xml.Element("Port").Value).ToArray()[0]);
             try
             {
+                string ip = miniClient.Descendants("Server").Select(xml => xml.Element("IP").Value).ToArray()[0];
+                int port = Convert.ToInt32(miniClient.Descendants("Server").Select(xml => xml.Element("Port").Value).ToArray()[0]);
                 return new IPEndPoint(IPAddress.Parse(ip), port);
             }
             catch
