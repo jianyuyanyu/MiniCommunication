@@ -12,12 +12,12 @@
 
 **编译以下项目**
 
-**核心库**
+核心库
 MiniSocket.Transmitting
 MiniSocket.Server
 MiniSocket.Client
 
-**终端程序**
+终端程序
 MiniComm.Server
 MiniComm.Client
 
