@@ -4,6 +4,8 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using MiniSocket.Client;
+using System.Xml.Linq;
+using System.Linq;
 
 namespace MiniComm.Client
 {
@@ -49,24 +51,23 @@ namespace MiniComm.Client
         /// <returns></returns>
         public static IPEndPoint GetServerIPEndPoint()
         {
-            if (!File.Exists("Config.ini"))
+            string configFile = "client-config.xml";
+            if (!File.Exists(configFile))
             {
-                File.WriteAllLines("Config.ini", new string[] { "[Client]", "Server=0.0.0.0:0" }, Encoding.UTF8);
+                new XElement("MiniClient",
+                    new XElement("Server", new XElement("IP", "0.0.0.0"), new XElement("Port", 0))).Save(configFile);
             }
-            string[] config = File.ReadAllLines("Config.ini", Encoding.UTF8);
-            if (config.Length == 2)
+            XElement miniClient = XElement.Load(configFile);
+            string ip = miniClient.Descendants("Server").Select(xml => xml.Element("IP").Value).ToArray()[0];
+            int port = Convert.ToInt32(miniClient.Descendants("Server").Select(xml => xml.Element("Port").Value).ToArray()[0]);
+            try
             {
-                string[] ipAddress = config[1].Split(new string[] { "Server=" }, StringSplitOptions.RemoveEmptyEntries);
-                if (ipAddress.Length == 1)
-                {
-                    try
-                    {
-                        return IPEndPoint.Parse(ipAddress[0]);
-                    }
-                    catch { }
-                }
+                return new IPEndPoint(IPAddress.Parse(ip), port);
             }
-            return IPEndPoint.Parse("0.0.0.0:0");
+            catch
+            {
+                return IPEndPoint.Parse("0.0.0.0:0");
+            }
         }
 
         /// <summary>

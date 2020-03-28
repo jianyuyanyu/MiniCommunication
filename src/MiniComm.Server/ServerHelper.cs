@@ -39,10 +39,9 @@ namespace MiniComm.Server
         {
             if (!File.Exists(configFilePath))
             {
-                XElement miniServer = new XElement("MiniServer",
-                    new XElement("Server", new XElement("IP", "0.0.0.0"), new XElement("Port", 10101)),
-                    new XElement("Database", new XElement("ConnectionString", "")));
-                miniServer.Save(configFilePath);
+                new XElement("MiniServer",
+                    new XElement("Server", new XElement("IP", "0.0.0.0"), new XElement("Port", 0)),
+                    new XElement("Database", new XElement("ConnectionString", ""))).Save(configFilePath);
             }
         }
 
@@ -51,10 +50,10 @@ namespace MiniComm.Server
         /// </summary>
         public static IPEndPoint GetServerIPEndPoint()
         {
-            XElement root = XElement.Load(configFilePath);
-            string ip = root.Descendants("Server").Select(xml => xml.Element("IP").Value).ToArray()[0];
-            int port = Convert.ToInt32(root.Descendants("Server").Select(xml => xml.Element("Port").Value).ToArray()[0]);
-            return new IPEndPoint(IPAddress.Parse(ip), port); ;
+            XElement miniServer = XElement.Load(configFilePath);
+            string ip = miniServer.Descendants("Server").Select(xml => xml.Element("IP").Value).ToArray()[0];
+            int port = Convert.ToInt32(miniServer.Descendants("Server").Select(xml => xml.Element("Port").Value).ToArray()[0]);
+            return new IPEndPoint(IPAddress.Parse(ip), port);
         }
 
         /// <summary>
