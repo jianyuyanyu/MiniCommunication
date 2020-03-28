@@ -25,11 +25,3 @@ MiniComm.Client
 #### 配置文件
 
 将server-config.xml和client-config.xml文件分别copy到Server和Client终端的根目录，并进行相应的配置(可以通过启动终端自动创建)
-
-
-
-
-
-
-
-
