@@ -21,6 +21,7 @@ namespace MiniComm.Client.ViewModels
         private DownloadFile _downloadFile;
 
         private bool sendFileCanExecute = true;
+        private bool refreshCanExecute = true;
 
         public static Action<RequestResult> RequestResultAction;
 
@@ -31,6 +32,7 @@ namespace MiniComm.Client.ViewModels
         public DelegateCommand SendTextCommand { get; }
         public DelegateCommand SendImageCommand { get; }
         public DelegateCommand SendFileCommand { get; }
+        public DelegateCommand RefreshCommand { get; }
         public DelegateCommand CloseCommand { get; }
 
         private UserModel _userModel;
@@ -83,6 +85,7 @@ namespace MiniComm.Client.ViewModels
             SendTextCommand = new DelegateCommand(SendText);
             SendImageCommand = new DelegateCommand(SendImage);
             SendFileCommand = new DelegateCommand(SendFile, SendFileCanExecute);
+            RefreshCommand = new DelegateCommand(Refresh, RefreshCanExecute);
             CloseCommand = new DelegateCommand(Close);
             FriendList = new ObservableCollection<UserModel>();
             MessageList = new ObservableCollection<MessageModel>();
@@ -394,6 +397,22 @@ namespace MiniComm.Client.ViewModels
                     MessageBox.Show("提交时发生异常，发送失败！", Config.Name, MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+        }
+
+        /// <summary>
+        /// 检查刷新功能是否可用
+        /// </summary>
+        private bool RefreshCanExecute() => refreshCanExecute;
+
+        /// <summary>
+        /// 刷新
+        /// </summary>
+        private async void Refresh()
+        {
+            refreshCanExecute = false;
+            await LoadFriendAsync();
+            await ClientHelper.WaitAsync(() => false, 5);
+            refreshCanExecute = true;
         }
 
         /// <summary>

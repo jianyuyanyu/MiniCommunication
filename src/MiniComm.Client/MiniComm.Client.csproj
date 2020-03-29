@@ -22,6 +22,7 @@
     <None Remove="Resources\Images\girl.png" />
     <None Remove="Resources\Images\picture.png" />
     <None Remove="Resources\Images\m.ico" />
+    <None Remove="Resources\Images\refresh.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,6 +44,7 @@
     <Resource Include="Resources\Images\girl.png" />
     <Resource Include="Resources\Images\picture.png" />
     <Resource Include="Resources\Images\m.ico" />
+    <Resource Include="Resources\Images\refresh.png" />
   </ItemGroup>
 
 </Project>
