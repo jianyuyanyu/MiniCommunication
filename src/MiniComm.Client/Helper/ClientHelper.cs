@@ -146,17 +146,11 @@ namespace MiniComm.Client.Helper
         /// <param name="height">裁剪后的高度</param>
         public static bool CutPicture(string imagePath, string outputPath, int width, int height)
         {
-            if (imagePath != null && outputPath != null)
+            if (File.Exists(imagePath) && Directory.Exists(Path.GetDirectoryName(outputPath)))
             {
-                if (!imagePath.Equals(string.Empty) && !outputPath.Equals(string.Empty))
-                {
-                    if (File.Exists(imagePath))
-                    {
-                        Bitmap bitmap = new Bitmap(imagePath);
-                        new Bitmap(bitmap, width, height).Save(outputPath);
-                        return true;
-                    }
-                }
+                Bitmap bitmap = new Bitmap(imagePath);
+                new Bitmap(bitmap, width, height).Save(outputPath);
+                return true;
             }
             return false;
         }
@@ -168,22 +162,16 @@ namespace MiniComm.Client.Helper
         /// <param name="outputPath">输出路径</param>
         public static bool AutoCutPicture(string imagePath, string outputPath)
         {
-            if (imagePath != null && outputPath != null)
+            if (File.Exists(imagePath) && Directory.Exists(Path.GetDirectoryName(outputPath)))
             {
-                if (!imagePath.Equals(string.Empty) && !outputPath.Equals(string.Empty))
-                {
-                    if (File.Exists(imagePath))
-                    {
-                        Bitmap bitmap = new Bitmap(imagePath);
-                        if (bitmap.Width > bitmap.Height)
-                            new Bitmap(bitmap, 180, 100).Save(outputPath);
-                        else if (bitmap.Width < bitmap.Height)
-                            new Bitmap(bitmap, 100, 130).Save(outputPath);
-                        else
-                            new Bitmap(bitmap, 120, 120).Save(outputPath);
-                        return true;
-                    }
-                }
+                Bitmap bitmap = new Bitmap(imagePath);
+                if (bitmap.Width > bitmap.Height)
+                    new Bitmap(bitmap, 180, 100).Save(outputPath);
+                else if (bitmap.Width < bitmap.Height)
+                    new Bitmap(bitmap, 100, 130).Save(outputPath);
+                else
+                    new Bitmap(bitmap, 120, 120).Save(outputPath);
+                return true;
             }
             return false;
         }
@@ -193,7 +181,7 @@ namespace MiniComm.Client.Helper
         /// </summary>
         /// <param name="func">一个任务</param>
         /// <param name="seconds">等待的时间，-1为无限等待</param>
-        public static async Task<bool> WaitAsync(Func<bool> func, int seconds)
+        public static async Task<bool> WaitAsync(Func<bool> func, double seconds)
         {
             if (func != null && seconds > -2)
             {

@@ -48,7 +48,6 @@ namespace MiniComm.Client
         /// <summary>
         /// 获取服务器网络终结点
         /// </summary>
-        /// <returns></returns>
         public static IPEndPoint GetServerIPEndPoint()
         {
             string configFile = "client-config.xml";

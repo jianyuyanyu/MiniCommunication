@@ -141,7 +141,7 @@ namespace MiniComm.Client.ViewModels
                             {
                                 EditInfo.EditInfoWindow.Dispatcher.Invoke(() =>
                                 {
-                                    (Home.HomeWindow?.DataContext as HomeViewModel)?.LoadCommand?.Execute(null);
+                                    (Home.HomeWindow?.DataContext as HomeViewModel)?.LoadUserCommand?.Execute(null);
                                     EditInfo.EditInfoWindow?.Close();
                                 });
                                 MessageBox.Show("资料保存成功！", Config.Name, MessageBoxButton.OK, MessageBoxImage.Asterisk);

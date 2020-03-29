@@ -81,7 +81,7 @@ namespace MiniComm.Client.ViewModels
                                 {
                                     UserInfo.UserInfoWindow.Dispatcher.Invoke(() =>
                                     {
-                                        (Home.HomeWindow?.DataContext as HomeViewModel)?.LoadCommand?.Execute(null);
+                                        (Home.HomeWindow?.DataContext as HomeViewModel)?.LoadUserCommand?.Execute(null);
                                         UserInfo.UserInfoWindow.Close();
                                     });
                                     MessageBox.Show("头像上传成功！", Config.Name, MessageBoxButton.OK, MessageBoxImage.Asterisk);

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MiniComm.Client.Views"
         xmlns:mini="clr-namespace:MiniComm.Client"
+        xmlns:sys="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d"
         Title="{x:Static mini:Config.Name}" Height="620" Width="980"
         WindowStartupLocation="CenterScreen" Style="{StaticResource WindowStyle}"
@@ -58,8 +59,11 @@
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10"
                     VerticalAlignment="Top" HorizontalAlignment="Left">
-            <Button Style="{StaticResource HeadIconButtonStyle}" Command="{Binding ShowUserInfoCommand}"
-                    CommandParameter="True" />
+            <Button Style="{StaticResource HeadIconButtonStyle}" Command="{Binding ShowUserInfoCommand}">
+                <Button.CommandParameter>
+                    <sys:Boolean>True</sys:Boolean>
+                </Button.CommandParameter>
+            </Button>
         </StackPanel>
 
         <Grid Grid.Row="1">
@@ -82,7 +86,11 @@
                 </ListBox.ItemTemplate>
                 <ListBox.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="查看资料" Command="{Binding ShowUserInfoCommand}" CommandParameter="False" />
+                        <MenuItem Header="查看资料" Command="{Binding ShowUserInfoCommand}">
+                            <MenuItem.CommandParameter>
+                                <sys:Boolean>False</sys:Boolean>
+                            </MenuItem.CommandParameter>
+                        </MenuItem>
                         <MenuItem Header="移除好友" Command="{Binding RemoveFriendCommand}" />
                     </ContextMenu>
                 </ListBox.ContextMenu>

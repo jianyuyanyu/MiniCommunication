@@ -11,6 +11,7 @@ using MiniComm.Client.Models;
 using MiniComm.Client.Helper;
 using MiniSocket.Client;
 using MiniSocket.Transmitting;
+using System.Threading.Tasks;
 
 namespace MiniComm.Client.ViewModels
 {
@@ -23,8 +24,9 @@ namespace MiniComm.Client.ViewModels
 
         public static Action<RequestResult> RequestResultAction;
 
-        public DelegateCommand LoadCommand { get; }
-        public DelegateCommand<string> ShowUserInfoCommand { get; }
+        public DelegateCommand LoadUserCommand { get; }
+        public DelegateCommand LoadFriendCommand { get; }
+        public DelegateCommand<bool> ShowUserInfoCommand { get; }
         public DelegateCommand RemoveFriendCommand { get; }
         public DelegateCommand SendTextCommand { get; }
         public DelegateCommand SendImageCommand { get; }
@@ -74,8 +76,9 @@ namespace MiniComm.Client.ViewModels
         {
             _dataService = dataService;
             _downloadFile = new DownloadFile();
-            LoadCommand = new DelegateCommand(Load);
-            ShowUserInfoCommand = new DelegateCommand<string>(ShowUserInfo);
+            LoadUserCommand = new DelegateCommand(LoadUser);
+            LoadFriendCommand = new DelegateCommand(LoadFriend);
+            ShowUserInfoCommand = new DelegateCommand<bool>(ShowUserInfo);
             RemoveFriendCommand = new DelegateCommand(RemoveFriend);
             SendTextCommand = new DelegateCommand(SendText);
             SendImageCommand = new DelegateCommand(SendImage);
@@ -97,7 +100,15 @@ namespace MiniComm.Client.ViewModels
         /// </summary>
         private async void Load()
         {
-            /*加载用户数据*/
+            await LoadUserAsync();
+            await LoadFriendAsync();
+        }
+
+        /// <summary>
+        /// 异步的加载用户信息
+        /// </summary>
+        private async Task LoadUserAsync()
+        {
             await ClientHelper.WaitAsync(() => RequestResultAction == null, -1);
 
             RequestResultAction = new Action<RequestResult>((RequestResult result) =>
@@ -114,35 +125,39 @@ namespace MiniComm.Client.ViewModels
                 RequestResultAction = null;
                 MessageBox.Show("加载用户数据时发生错误！", Config.Name, MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
 
-            /*加载好友数据*/
+        /// <summary>
+        /// 异步的加载好友信息
+        /// </summary>
+        private async Task LoadFriendAsync()
+        {
             await ClientHelper.WaitAsync(() => RequestResultAction == null, -1);
 
             RequestResultAction = new Action<RequestResult>((RequestResult result) =>
             {
                 User[] users = result.Object as User[];
-                if (users != null)
-                {
-                    Home.HomeWindow.Dispatcher.Invoke(() =>
-                    {
-                        var messageRecord = CopyMessageRecord();
-                        MessageRecord.Clear();
-                        FriendList.Clear();
+                if (users == null) return;
 
-                        foreach (var user in users)
+                Home.HomeWindow.Dispatcher.Invoke(() =>
+                {
+                    var messageRecord = CopyMessageRecord();
+                    MessageRecord.Clear();
+                    FriendList.Clear();
+
+                    foreach (var user in users)
+                    {
+                        FriendList.Add(_dataService.GetUserModel(user));
+                        MessageRecord.Add(user.UserName, new List<MessageModel>());
+                        if (messageRecord.ContainsKey(user.UserName))
                         {
-                            FriendList.Add(_dataService.GetUserModel(user));
-                            MessageRecord.Add(user.UserName, new List<MessageModel>());
-                            if (messageRecord.ContainsKey(user.UserName))
+                            foreach (var messageModel in messageRecord[user.UserName])
                             {
-                                foreach (var messageModel in messageRecord[user.UserName])
-                                {
-                                    MessageRecord[user.UserName].Add(messageModel);
-                                }
+                                MessageRecord[user.UserName].Add(messageModel);
                             }
                         }
-                    });
-                }
+                    }
+                });
             });
 
             if (!Config.MiniClient.SendDatabaseRequest(new User() { UserName = UserModel.UserName }, "GetFriends", null))
@@ -150,6 +165,22 @@ namespace MiniComm.Client.ViewModels
                 RequestResultAction = null;
                 MessageBox.Show("加载好友数据时发生错误！", Config.Name, MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        /// <summary>
+        /// 加载用户信息
+        /// </summary>
+        private async void LoadUser()
+        {
+            await LoadUserAsync();
+        }
+
+        /// <summary>
+        /// 加载好友信息
+        /// </summary>
+        private async void LoadFriend()
+        {
+            await LoadFriendAsync();
         }
 
         /// <summary>
@@ -205,46 +236,39 @@ namespace MiniComm.Client.ViewModels
         /// 显示用户信息
         /// </summary>
         /// <param name="value">True表示个人信息，False表示好友信息</param>
-        private async void ShowUserInfo(string value)
+        private async void ShowUserInfo(bool value)
         {
-            if (value != null)
+            if (value)
             {
-                if (value.Equals("True"))
+                if (UserModel == null) return;
+                new UserInfo(UserModel, Visibility.Visible).Show();
+                return;
+            }
+
+            if (SelectedFriend == null) return;
+
+            string friendName = SelectedFriend.UserName;
+
+            await ClientHelper.WaitAsync(() => RequestResultAction == null, -1);
+
+            RequestResultAction = new Action<RequestResult>((RequestResult result) =>
+            {
+                User user = result.Object as User;
+                if (user != null)
                 {
-                    if (UserModel != null)
+                    Home.HomeWindow.Dispatcher.Invoke(() =>
                     {
-                        new UserInfo(UserModel, Visibility.Visible).Show();
-                    }
+                        new UserInfo(_dataService.GetUserModel(user), Visibility.Hidden).Show();
+                    });
+                    return;
                 }
-                else
-                {
-                    if (SelectedFriend != null)
-                    {
-                        string friendName = SelectedFriend.UserName;
+                MessageBox.Show("加载用户数据时发生错误！", Config.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+            });
 
-                        await ClientHelper.WaitAsync(() => RequestResultAction == null, -1);
-
-                        RequestResultAction = new Action<RequestResult>((RequestResult result) =>
-                        {
-                            User user = result.Object as User;
-                            if (user != null)
-                            {
-                                Home.HomeWindow.Dispatcher.Invoke(() =>
-                                {
-                                    new UserInfo(_dataService.GetUserModel(user), Visibility.Hidden).Show();
-                                });
-                                return;
-                            }
-                            MessageBox.Show("加载用户数据时发生错误！", Config.Name, MessageBoxButton.OK, MessageBoxImage.Error);
-                        });
-
-                        if (!Config.MiniClient.SendDatabaseRequest(new User() { UserName = friendName }, "GetUserInfo", null))
-                        {
-                            RequestResultAction = null;
-                            MessageBox.Show("加载用户数据时发生错误！", Config.Name, MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
-                    }
-                }
+            if (!Config.MiniClient.SendDatabaseRequest(new User() { UserName = friendName }, "GetUserInfo", null))
+            {
+                RequestResultAction = null;
+                MessageBox.Show("加载用户数据时发生错误！", Config.Name, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

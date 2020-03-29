@@ -104,23 +104,20 @@ namespace MiniComm.Server
         {
             lock (lockObject)
             {
-                if (name != null && headIcon != null)
+                if (!name?.Equals(string.Empty) == true && headIcon != null)
                 {
-                    if (!name.Equals(string.Empty))
+                    string directory = "Users\\" + name;
+                    string path = directory + "\\head.png";
+                    if (!Directory.Exists(directory))
                     {
-                        string directory = "Users\\" + name;
-                        string path = directory + "\\head.png";
-                        if (!Directory.Exists(directory))
-                        {
-                            Directory.CreateDirectory(directory);
-                        }
-                        using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write))
-                        {
-                            fs.Write(headIcon, 0, headIcon.Length);
-                            fs.Flush();
-                        }
-                        return path;
+                        Directory.CreateDirectory(directory);
                     }
+                    using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write))
+                    {
+                        fs.Write(headIcon, 0, headIcon.Length);
+                        fs.Flush();
+                    }
+                    return path;
                 }
                 return string.Empty;
             }
@@ -134,16 +131,13 @@ namespace MiniComm.Server
         {
             lock (lockObject)
             {
-                if (path != null && (!path?.Equals(string.Empty) == true))
+                if (File.Exists(path))
                 {
-                    if (File.Exists(path))
+                    using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
                     {
-                        using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-                        {
-                            byte[] buffer = new byte[fs.Length];
-                            fs.Read(buffer, 0, buffer.Length);
-                            return buffer;
-                        }
+                        byte[] buffer = new byte[fs.Length];
+                        fs.Read(buffer, 0, buffer.Length);
+                        return buffer;
                     }
                 }
                 return null;

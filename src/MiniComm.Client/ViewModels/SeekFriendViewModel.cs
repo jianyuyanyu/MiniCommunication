@@ -100,7 +100,7 @@ namespace MiniComm.Client.ViewModels
             {
                 SeekFriend.SeekFriendWindow.Dispatcher.Invoke(() =>
                 {
-                    (Home.HomeWindow?.DataContext as HomeViewModel)?.LoadCommand?.Execute(null);
+                    (Home.HomeWindow?.DataContext as HomeViewModel)?.LoadFriendCommand?.Execute(null);
                 });
                 Config.MiniClient.ClientRequestResult -= MiniClient_ClientRequestResult;
                 MessageBox.Show($"好友 {user.NickName}({user.UserName}) 添加成功！", Config.Name, MessageBoxButton.OK, MessageBoxImage.Asterisk);
